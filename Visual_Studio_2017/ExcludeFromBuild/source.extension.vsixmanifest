@@ -6,6 +6,7 @@
         <Description xml:space="preserve">ExcludeFromBuild extension allows to exclude directories and multiple files from build.</Description>
         <License>LICENSE_1_0.txt</License>
         <Icon>icon.png</Icon>
+        <PreviewImage>preview.png</PreviewImage>
     </Metadata>
     <Installation>
         <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[14.0,17.0)" />
