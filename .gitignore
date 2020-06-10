@@ -1,0 +1,8 @@
+Visual_Studio_2017/.vs
+Visual_Studio_2017/ExcludeFromBuild/ExcludeFromBuild.csproj.user
+Visual_Studio_2017/ExcludeFromBuild/bin
+Visual_Studio_2017/ExcludeFromBuild/obj
+Visual_Studio_2017/packages
+Visual_Studio_2017/*.sdf
+Visual_Studio_2017/*.db
+Visual_Studio_2017/*.opendb
