@@ -8,3 +8,5 @@ This extension allows to exclude from and include in build directories and multi
 3. Click either "Exclude From Build" or "Include In Build"
 
 ![Exclude From Build](images/preview.png)
+
+You can download this extension from [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=AdamWulkiewicz.ExcludeFromBuild).
