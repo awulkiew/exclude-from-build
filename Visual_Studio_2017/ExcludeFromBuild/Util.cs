@@ -18,8 +18,7 @@ namespace ExcludeFromBuild
         public enum Configuration { Active, All };
 
 #pragma warning disable VSTHRD010
-        public static void SetExcludedFromBuild(DTE2 dte, bool value,
-                                                Configuration configuration = Configuration.Active)
+        public static void SetExcludedFromBuild(DTE2 dte, bool value, Configuration configuration)
         {
             if (dte == null)
                 return;
@@ -102,5 +101,14 @@ namespace ExcludeFromBuild
             }
         }
 #pragma warning restore VSTHRD010
+
+        public static Configuration GetConfigurationOption()
+        {
+            var package = ExcludeFromBuildPackage.Instance;
+            var options = (ExcludeFromBuildOptionPage)package.GetDialogPage(typeof(ExcludeFromBuildOptionPage));
+            return options.DefaultConfiguration == ExcludeFromBuildOptionPage.Configuration.All
+                 ? Configuration.All
+                 : Configuration.Active;
+        }
     }
 }

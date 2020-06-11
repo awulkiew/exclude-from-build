@@ -33,12 +33,18 @@ namespace ExcludeFromBuild
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [Guid(ExcludeFromBuildPackage.PackageGuidString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
+    [ProvideOptionPage(typeof(ExcludeFromBuildOptionPage), "Exclude From Build", "General", 0, 0, true)]
     public sealed class ExcludeFromBuildPackage : Package
     {
         /// <summary>
         /// ExcludeFromBuildPackage GUID string.
         /// </summary>
         public const string PackageGuidString = "90dd6cdb-b4c3-4e74-9445-b4b045cb6b7e";
+
+        /// <summary>
+        /// ExcludeFromBuildPackage Instance set during initialization of the package.
+        /// </summary>
+        public static ExcludeFromBuildPackage Instance { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExcludeFromBuildPackage"/> class.
@@ -57,7 +63,7 @@ namespace ExcludeFromBuild
         /// </summary>
         protected override void Initialize()
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
+            Instance = this;
 
             base.Initialize();
 
@@ -68,8 +74,12 @@ namespace ExcludeFromBuild
 
         public new object GetService(Type serviceType)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
             return base.GetService(serviceType);
+        }
+
+        public new DialogPage GetDialogPage(Type dialogPageType)
+        {
+            return base.GetDialogPage(dialogPageType);
         }
     }
 }

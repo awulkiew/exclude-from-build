@@ -63,6 +63,9 @@
     <Compile Include="ExcludeFromBuildAllCommand.cs" />
     <Compile Include="ExcludeFromBuildActiveCommand.cs" />
     <Compile Include="ExcludeFromBuildCommand.cs" />
+    <Compile Include="ExcludeFromBuildOptionPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="ExcludeFromBuildPackage.cs" />
     <Compile Include="IncludeInBuildAllCommand.cs" />
     <Compile Include="IncludeInBuildActiveCommand.cs" />
