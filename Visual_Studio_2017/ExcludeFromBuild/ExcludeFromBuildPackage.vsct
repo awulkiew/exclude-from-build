@@ -39,8 +39,20 @@
       <Group guid="guidExcludeFromBuildPackageCmdSet" id="ExcludeFromBuildMenuGroup" priority="0x0600">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS" />
       </Group>
+      <Group guid="guidExcludeFromBuildPackageCmdSet" id="ExcludeFromBuildMoreMenuGroup" priority="0x0000">
+        <Parent guid="guidExcludeFromBuildPackageCmdSet" id="ExcludeFromBuildMoreMenu"/>
+      </Group>
     </Groups>
 
+    <Menus>
+      <Menu guid="guidExcludeFromBuildPackageCmdSet" id="ExcludeFromBuildMoreMenu" priority="0x0100" type="Menu">
+        <Parent guid="guidExcludeFromBuildPackageCmdSet" id="ExcludeFromBuildMenuGroup"/>
+        <Strings>
+          <ButtonText>More</ButtonText>
+        </Strings>
+      </Menu>
+    </Menus>
+    
     <!--Buttons section. -->
     <!--This section defines the elements the user can interact with, like a menu command or a button
         or combo box in a toolbar. -->
@@ -66,6 +78,34 @@
           <ButtonText>Include In Build</ButtonText>
         </Strings>
       </Button>
+      <Button guid="guidExcludeFromBuildPackageCmdSet" id="ExcludeFromBuildActiveCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidExcludeFromBuildPackageCmdSet" id="ExcludeFromBuildMoreMenuGroup" />
+        <Icon guid="guidExcludeFromBuildIcon" id="excludeFromBuildIcon" />
+        <Strings>
+          <ButtonText>Exclude (Active Configuration)</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidExcludeFromBuildPackageCmdSet" id="IncludeInBuildActiveCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidExcludeFromBuildPackageCmdSet" id="ExcludeFromBuildMoreMenuGroup" />
+        <Icon guid="guidIncludeInBuildIcon" id="includeInBuildIcon" />
+        <Strings>
+          <ButtonText>Include (Active Configuration)</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidExcludeFromBuildPackageCmdSet" id="ExcludeFromBuildAllCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidExcludeFromBuildPackageCmdSet" id="ExcludeFromBuildMoreMenuGroup" />
+        <Icon guid="guidExcludeFromBuildIcon" id="excludeFromBuildIcon" />
+        <Strings>
+          <ButtonText>Exclude (All Configurations)</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidExcludeFromBuildPackageCmdSet" id="IncludeInBuildAllCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidExcludeFromBuildPackageCmdSet" id="ExcludeFromBuildMoreMenuGroup" />
+        <Icon guid="guidIncludeInBuildIcon" id="includeInBuildIcon" />
+        <Strings>
+          <ButtonText>Include (All Configurations)</ButtonText>
+        </Strings>
+      </Button>
     </Buttons>
 
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
@@ -89,8 +129,14 @@
     <!-- This is the guid used to group the menu commands together -->
     <GuidSymbol name="guidExcludeFromBuildPackageCmdSet" value="{29f38563-d98e-4d70-ae65-94c712f4b871}">
       <IDSymbol name="ExcludeFromBuildMenuGroup" value="0x1020" />
+      <IDSymbol name="ExcludeFromBuildMoreMenu" value="0x1100"/>
+      <IDSymbol name="ExcludeFromBuildMoreMenuGroup" value="0x1150"/>
       <IDSymbol name="ExcludeFromBuildCommandId" value="0x0100" />
       <IDSymbol name="IncludeInBuildCommandId" value="4129" />
+      <IDSymbol name="ExcludeFromBuildActiveCommandId" value="4130" />
+      <IDSymbol name="IncludeInBuildActiveCommandId" value="4131" />
+      <IDSymbol name="ExcludeFromBuildAllCommandId" value="4132" />
+      <IDSymbol name="IncludeInBuildAllCommandId" value="4133" />
     </GuidSymbol>
 
     <GuidSymbol name="guidExcludeFromBuildIcon" value="{3D5011F6-6034-4038-920F-40F66CE22DDA}">

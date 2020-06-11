@@ -51,8 +51,6 @@ namespace ExcludeFromBuild
             // initialization is the Initialize method.
         }
 
-        #region Package Members
-
         /// <summary>
         /// Initialization of the package; this method is called right after the package is sited, so this is the place
         /// where you can put all the initialization code that rely on services provided by VisualStudio.
@@ -65,6 +63,7 @@ namespace ExcludeFromBuild
 
             ExcludeFromBuildCommand.Initialize(this);
             IncludeInBuildCommand.Initialize(this);
+            ExcludeFromBuildAllCommand.Initialize(this);
         }
 
         public new object GetService(Type serviceType)
@@ -72,7 +71,5 @@ namespace ExcludeFromBuild
             ThreadHelper.ThrowIfNotOnUIThread();
             return base.GetService(serviceType);
         }
-
-        #endregion
     }
 }
