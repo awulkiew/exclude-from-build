@@ -33,7 +33,7 @@ namespace ExcludeFromBuild
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [Guid(ExcludeFromBuildPackage.PackageGuidString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
-    [ProvideOptionPage(typeof(ExcludeFromBuildOptionPage), "Exclude From Build", "General", 0, 0, true)]
+    [ProvideOptionPage(typeof(ExcludeFromBuildOptionPage), "Exclude from Build", "General", 0, 0, true)]
     public sealed class ExcludeFromBuildPackage : Package
     {
         /// <summary>

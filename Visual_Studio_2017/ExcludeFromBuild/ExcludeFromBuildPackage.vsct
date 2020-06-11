@@ -68,14 +68,14 @@
         <Parent guid="guidExcludeFromBuildPackageCmdSet" id="ExcludeFromBuildMenuGroup" />
         <Icon guid="guidExcludeFromBuildIcon" id="excludeFromBuildIcon" />
         <Strings>
-          <ButtonText>Exclude From Build</ButtonText>
+          <ButtonText>Exclude from Build</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidExcludeFromBuildPackageCmdSet" id="IncludeInBuildCommandId" priority="0x0100" type="Button">
         <Parent guid="guidExcludeFromBuildPackageCmdSet" id="ExcludeFromBuildMenuGroup" />
         <Icon guid="guidIncludeInBuildIcon" id="includeInBuildIcon" />
         <Strings>
-          <ButtonText>Include In Build</ButtonText>
+          <ButtonText>Include in Build</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidExcludeFromBuildPackageCmdSet" id="ExcludeFromBuildActiveCommandId" priority="0x0100" type="Button">
@@ -115,8 +115,8 @@
             bitmap strip containing the bitmaps and then there are the numeric ids of the elements used
             inside a button definition. An important aspect of this declaration is that the element id
             must be the actual index (1-based) of the bitmap inside the bitmap strip. -->
-      <Bitmap guid="guidExcludeFromBuildIcon" href="Resources\FileExclude.png" usedList="excludeFromBuildIcon" />
-      <Bitmap guid="guidIncludeInBuildIcon" href="Resources\FileOK.png" usedList="includeInBuildIcon" />
+      <Bitmap guid="guidExcludeFromBuildIcon" href="Resources\FilesExclude.png" usedList="excludeFromBuildIcon" />
+      <Bitmap guid="guidIncludeInBuildIcon" href="Resources\FilesInclude.png" usedList="includeInBuildIcon" />
       <Bitmap guid="guidImages" href="Resources\ExcludeFromBuildCommand.png" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows, bmpPicStrikethrough" />
       <Bitmap guid="guidImages1" href="Resources\IncludeInBuildCommand.png" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows, bmpPicStrikethrough" />
     </Bitmaps>

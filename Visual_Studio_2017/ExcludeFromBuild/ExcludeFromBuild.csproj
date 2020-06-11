@@ -101,6 +101,8 @@
     <Content Include="Resources\ExcludeFromBuildPackage.ico" />
     <Content Include="Resources\FileExclude.png" />
     <Content Include="Resources\FileOK.png" />
+    <Content Include="Resources\FilesExclude.png" />
+    <Content Include="Resources\FilesInclude.png" />
     <Content Include="Resources\IncludeInBuildCommand.png" />
   </ItemGroup>
   <ItemGroup>
