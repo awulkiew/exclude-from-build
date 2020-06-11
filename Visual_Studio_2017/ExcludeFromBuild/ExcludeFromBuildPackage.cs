@@ -69,7 +69,10 @@ namespace ExcludeFromBuild
 
             ExcludeFromBuildCommand.Initialize(this);
             IncludeInBuildCommand.Initialize(this);
+            ExcludeFromBuildActiveCommand.Initialize(this);
+            IncludeInBuildActiveCommand.Initialize(this);
             ExcludeFromBuildAllCommand.Initialize(this);
+            IncludeInBuildAllCommand.Initialize(this);
         }
 
         public new object GetService(Type serviceType)
