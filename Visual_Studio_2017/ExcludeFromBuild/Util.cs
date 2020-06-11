@@ -42,14 +42,16 @@ namespace ExcludeFromBuild
                 UIHierarchyItem hitem = item as UIHierarchyItem;
                 if (hitem != null)
                 {
-                    var pitem = hitem.Object as ProjectItem;
-                    if (pitem != null)
+                    // Supports Solution, Project and ProjectItem so there is no need to
+                    // check each of them
+                    if (hitem.UIHierarchyItems.Count > 0)
                     {
-                        if (hitem.UIHierarchyItems.Count > 0)
-                        {
-                            SetExcludedFromBuildRecursive(hitem.UIHierarchyItems, value, configuration);
-                        }
-                        else
+                        SetExcludedFromBuildRecursive(hitem.UIHierarchyItems, value, configuration);
+                    }
+                    else
+                    {
+                        var pitem = hitem.Object as ProjectItem;
+                        if (pitem != null)
                         {
                             var kind = pitem.Object.GetType().InvokeMember("Kind",
                                             BindingFlags.GetProperty,
