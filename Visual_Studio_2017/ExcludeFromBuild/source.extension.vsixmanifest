@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="ExcludeFromBuild.aff619f3-ad99-4246-b570-b012a51f21d3" Version="1.1" Language="en-US" Publisher="Adam Wulkiewicz" />
+        <Identity Id="ExcludeFromBuild.aff619f3-ad99-4246-b570-b012a51f21d3" Version="1.2" Language="en-US" Publisher="Adam Wulkiewicz" />
         <DisplayName>Exclude From Build</DisplayName>
         <Description xml:space="preserve">ExcludeFromBuild extension allows to exclude directories and multiple files from build.</Description>
         <License>LICENSE_1_0.txt</License>
@@ -9,16 +9,16 @@
         <PreviewImage>preview.png</PreviewImage>
     </Metadata>
     <Installation>
-        <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[15.0,17.0)" />
-        <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[15.0,17.0)" />
-        <InstallationTarget Id="Microsoft.VisualStudio.Enterprise" Version="[15.0,17.0)" />
+        <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[12.0,17.0)" />
+        <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[12.0,17.0)" />
+        <InstallationTarget Id="Microsoft.VisualStudio.Enterprise" Version="[12.0,17.0)" />
     </Installation>
     <Dependencies>
         <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
-        <Dependency Id="Microsoft.VisualStudio.MPF.15.0" DisplayName="Visual Studio MPF 15.0" d:Source="Installed" Version="[15.0,17.0)" />
+        <Dependency Id="Microsoft.VisualStudio.MPF.12.0" DisplayName="Visual Studio MPF 12.0" d:Source="Installed" Version="[12.0,17.0)" />
     </Dependencies>
     <Prerequisites>
-        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0,17.0)" DisplayName="Visual Studio core editor" />
+        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[12.0,17.0)" DisplayName="Visual Studio core editor" />
     </Prerequisites>
     <Assets>
         <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
