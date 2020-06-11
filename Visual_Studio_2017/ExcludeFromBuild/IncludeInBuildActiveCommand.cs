@@ -90,7 +90,7 @@ namespace ExcludeFromBuild
         {
             ThreadHelper.ThrowIfNotOnUIThread();
             var dte = (DTE2)ServiceProvider.GetService(typeof(DTE));
-            Util.SetExcludedFromBuild(dte, false, false);
+            Util.SetExcludedFromBuild(dte, false, Util.Configuration.Active);
         }
     }
 }

@@ -15,26 +15,18 @@ namespace ExcludeFromBuild
 {
     class Util
     {
-        class ConfigInfo
-        {
-            public string Configuration;
-            public string Platform;
-            public ConfigInfo(string configuration, string platform)
-            {
-                Configuration = configuration;
-                Platform = platform;
-            }
-        }
+        public enum Configuration { Active, All };
 
 #pragma warning disable VSTHRD010
-        public static void SetExcludedFromBuild(DTE2 dte, bool value, bool setAllCongurations = false)
+        public static void SetExcludedFromBuild(DTE2 dte, bool value,
+                                                Configuration configuration = Configuration.Active)
         {
             if (dte == null)
                 return;
             var items = dte.ToolWindows.SolutionExplorer.SelectedItems as Array;
             if (items == null)
                 return;
-            SetExcludedFromBuildRecursive(items, value, setAllCongurations);
+            SetExcludedFromBuildRecursive(items, value, configuration);
         }
 
         // Casting COM objects to VCFile and VCFilter works but the problem is that
@@ -44,7 +36,7 @@ namespace ExcludeFromBuild
 
         private static void SetExcludedFromBuildRecursive(IEnumerable items,
                                                           bool value,
-                                                          bool setAllCongurations)
+                                                          Configuration configuration)
         {
             foreach (var item in items)
             {
@@ -56,7 +48,7 @@ namespace ExcludeFromBuild
                     {
                         if (hitem.UIHierarchyItems.Count > 0)
                         {
-                            SetExcludedFromBuildRecursive(hitem.UIHierarchyItems, value, setAllCongurations);
+                            SetExcludedFromBuildRecursive(hitem.UIHierarchyItems, value, configuration);
                         }
                         else
                         {
@@ -75,8 +67,9 @@ namespace ExcludeFromBuild
 
                                 foreach (var c in fileConfigurations)
                                 {
-                                    bool set = setAllCongurations;
-                                    if (!setAllCongurations)
+                                    bool set = (configuration == Configuration.All);
+
+                                    if (!set)
                                     {
                                         var config = c.GetType().InvokeMember("ProjectConfiguration",
                                                         BindingFlags.GetProperty,
