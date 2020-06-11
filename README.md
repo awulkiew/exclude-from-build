@@ -9,4 +9,4 @@ This extension allows to exclude from and include in build directories and multi
 
 ![Exclude From Build](images/preview.png)
 
-You can download this extension from [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=AdamWulkiewicz.ExcludeFromBuild).
+You can download this extension from [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=AdamWulkiewicz.ExcludeFromBuild) or [GitHub](https://github.com/awulkiew/exclude-from-build/releases).
