@@ -31,7 +31,7 @@ namespace ExcludeFromBuild
         // Casting COM objects to VCFile and VCFilter works but the problem is that
         // for VS2017 and VS2019 one has to add different Microsoft.VisualStudio.VCProjectEngine
         // version than for VS2015. Otherwise casting resutls in null object.
-        // So below call properties of CPM objects manually.
+        // So below call properties of COM objects manually.
 
         private static void SetExcludedFromBuildRecursive(IEnumerable items,
                                                           bool value,
