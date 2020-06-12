@@ -17,6 +17,8 @@ namespace ExcludeFromBuild
     {
         public enum Configuration { Active, All };
 
+        private enum BuildAction { None = 0, Compile = 1, ApplicationDefinition = 6, Page = 7 };
+
 #pragma warning disable VSTHRD010
         public static void SetExcludedFromBuild(DTE2 dte, bool value, Configuration configuration)
         {
@@ -40,62 +42,73 @@ namespace ExcludeFromBuild
             foreach (var item in items)
             {
                 UIHierarchyItem hitem = item as UIHierarchyItem;
-                if (hitem != null)
+                if (hitem == null)
+                    continue;
+
+                // Any container, e.g. filter or C# XAML, etc.
+                if (hitem.UIHierarchyItems.Count > 0)
                 {
-                    // Supports Solution, Project and ProjectItem so there is no need to
-                    // check each of them
-                    if (hitem.UIHierarchyItems.Count > 0)
+                    SetExcludedFromBuildRecursive(hitem.UIHierarchyItems, value, configuration);
+                }
+
+                // For C++ this is Microsoft.VisualStudio.VCProjectEngine.VCProjectItem
+                // For C# this is VSLangProj.VSProjectItem (?)
+                var pitem = hitem.Object as ProjectItem;
+                if (pitem == null)
+                    continue;
+
+                string extension = GetPropertyValue(pitem, "Extension") as string;
+                if (extension == null)
+                    continue;
+                extension = extension.ToLowerInvariant();
+
+                // C#
+                if (extension == ".cs" || extension == ".xaml")
+                {
+                    Property buildActionProp = GetProperty(pitem, "BuildAction");
+                    if (buildActionProp == null)
+                        continue;
+                    if (extension == ".cs")
+                        buildActionProp.Value = (int)(value ? BuildAction.None : BuildAction.Compile);
+                    else //if (extension == ".xaml")
+                        buildActionProp.Value = (int)(value ? BuildAction.None : BuildAction.Page);
+                }
+                else if (extension == ".cpp" || extension == ".c" || extension == ".cc" || extension == ".cxx")
+                {
+                    string kind = GetPropertyValue(pitem, "Kind") as string;
+                    if (kind == "VCFile")
                     {
-                        SetExcludedFromBuildRecursive(hitem.UIHierarchyItems, value, configuration);
-                    }
-                    else
-                    {
-                        var pitem = hitem.Object as ProjectItem;
-                        if (pitem != null)
+                        var activeConfig = pitem.ContainingProject.ConfigurationManager.ActiveConfiguration;
+                        string activeConfigName = activeConfig.ConfigurationName;
+                        string activePlatformName = activeConfig.PlatformName;
+
+                        Property fileConfigurationsProp = GetProperty(pitem, "FileConfigurations");
+                        if (fileConfigurationsProp == null)
+                            continue;
+                        var fileConfigurations = fileConfigurationsProp.Object as IEnumerable;
+                        if (fileConfigurations == null)
+                            continue;
+
+                        foreach (var c in fileConfigurations)
                         {
-                            var kind = pitem.Object.GetType().InvokeMember("Kind",
-                                            BindingFlags.GetProperty,
-                                            null, pitem.Object, null) as string;
-                            if (kind == "VCFile")
+                            bool set = (configuration == Configuration.All);
+
+                            if (!set)
                             {
-                                var activeConfig = pitem.ContainingProject.ConfigurationManager.ActiveConfiguration;
-                                string activeConfigName = activeConfig.ConfigurationName;
-                                string activePlatformName = activeConfig.PlatformName;
-
-                                var fileConfigurations = pitem.Object.GetType().InvokeMember("FileConfigurations",
-                                                            BindingFlags.GetProperty,
-                                                            null, pitem.Object, null) as IEnumerable;
-
-                                foreach (var c in fileConfigurations)
+                                var config = GetPropertyValue(c, "ProjectConfiguration");
+                                if (config != null)
                                 {
-                                    bool set = (configuration == Configuration.All);
+                                    var cName = GetPropertyValue(config, "ConfigurationName") as string;
+                                    var cPlat = GetPropertyValue(config, "PlatformName") as string;
 
-                                    if (!set)
-                                    {
-                                        var config = c.GetType().InvokeMember("ProjectConfiguration",
-                                                        BindingFlags.GetProperty,
-                                                        null, c, null);
-                                        var cPath = config.GetType().InvokeMember("PersistPath",
-                                                        BindingFlags.GetProperty,
-                                                        null, config, null) as string;
-                                        var cName = config.GetType().InvokeMember("ConfigurationName",
-                                                        BindingFlags.GetProperty,
-                                                        null, config, null) as string;
-                                        var cPlat = config.GetType().InvokeMember("PlatformName",
-                                                        BindingFlags.GetProperty,
-                                                        null, config, null) as string;
-
-                                        set = activeConfigName == cName
-                                                && activePlatformName == cPlat;
-                                    }
-
-                                    if (set)
-                                    {
-                                        c.GetType().InvokeMember("ExcludedFromBuild",
-                                                BindingFlags.SetProperty,
-                                                null, c, new object[] { value });
-                                    }
+                                    set = activeConfigName == cName
+                                            && activePlatformName == cPlat;
                                 }
+                            }
+
+                            if (set)
+                            {
+                                SetPropertyValue(c, "ExcludedFromBuild", value);
                             }
                         }
                     }
@@ -103,6 +116,45 @@ namespace ExcludeFromBuild
             }
         }
 #pragma warning restore VSTHRD010
+
+        private static void SetPropertyValue(object o, string name, object value)
+        {
+            o.GetType().InvokeMember(name,
+                                     BindingFlags.SetProperty,
+                                     null, o, new object[] { value });
+        }
+
+        private static object GetPropertyValue(object o, string name)
+        {
+            try
+            {
+                return o.GetType().InvokeMember(name,
+                                BindingFlags.GetProperty,
+                                null, o, null);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        private static Property GetProperty(ProjectItem pitem, string name)
+        {
+            try
+            {
+                return pitem.Properties.Item(name);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        private static object GetPropertyValue(ProjectItem pitem, string name)
+        {
+            Property prop = GetProperty(pitem, name);
+            return prop != null ? prop.Value : null;
+        }
 
         public static Configuration GetConfigurationOption()
         {
