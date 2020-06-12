@@ -1,7 +1,7 @@
 # Exclude From Build
 ## extension for Visual Studio 2013, 2015, 2017 and 2019
 
-This extension allows to exclude from build or include in build multiple C/C++/C# files and directories with one click of a menu option.
+This extension allows to exclude from build or include in build multiple C/C++/C#/VB files and directories with one click of a menu option.
 
 1. Select directories and/or files you'd like to exclude or include
 2. Go to menu **Tools**
