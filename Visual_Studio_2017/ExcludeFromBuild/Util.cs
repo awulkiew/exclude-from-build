@@ -17,7 +17,23 @@ namespace ExcludeFromBuild
     {
         public enum Configuration { Active, All };
 
-        private enum BuildAction { None = 0, Compile = 1, ApplicationDefinition = 6, Page = 7 };
+        private class BuildAction
+        {
+            public BuildAction(DTE2 dte)
+            {
+                int i = dte.Version.IndexOf('.');
+                if (i < 0)
+                    i = dte.Version.Length;
+                version = int.Parse(dte.Version.Substring(0, i));
+            }
+
+            private readonly int version;
+
+            public int None { get { return 0; } }
+            public int Compile { get { return 1; } }
+            public int ApplicationDefinition { get { return version >= 15 ? 6 : 4; } }
+            public int Page { get { return version >= 15 ? 7 : 5; } }            
+        }
 
 #pragma warning disable VSTHRD010
         public static void SetExcludedFromBuild(DTE2 dte, bool value, Configuration configuration)
@@ -27,7 +43,8 @@ namespace ExcludeFromBuild
             var items = dte.ToolWindows.SolutionExplorer.SelectedItems as Array;
             if (items == null)
                 return;
-            SetExcludedFromBuildRecursive(items, value, configuration);
+            BuildAction buildAction = new BuildAction(dte);
+            SetExcludedFromBuildRecursive(items, value, configuration, buildAction);
         }
 
         // Casting COM objects to VCFile and VCFilter works but the problem is that
@@ -37,7 +54,8 @@ namespace ExcludeFromBuild
 
         private static void SetExcludedFromBuildRecursive(IEnumerable items,
                                                           bool value,
-                                                          Configuration configuration)
+                                                          Configuration configuration,
+                                                          BuildAction buildAction)
         {
             foreach (var item in items)
             {
@@ -48,7 +66,7 @@ namespace ExcludeFromBuild
                 // Any container, e.g. filter or C# XAML, etc.
                 if (hitem.UIHierarchyItems.Count > 0)
                 {
-                    SetExcludedFromBuildRecursive(hitem.UIHierarchyItems, value, configuration);
+                    SetExcludedFromBuildRecursive(hitem.UIHierarchyItems, value, configuration, buildAction);
                 }
 
                 // For C++ this is Microsoft.VisualStudio.VCProjectEngine.VCProjectItem
@@ -69,9 +87,9 @@ namespace ExcludeFromBuild
                     if (buildActionProp == null)
                         continue;
                     if (extension == ".cs")
-                        buildActionProp.Value = (int)(value ? BuildAction.None : BuildAction.Compile);
+                        buildActionProp.Value = value ? buildAction.None : buildAction.Compile;
                     else //if (extension == ".xaml")
-                        buildActionProp.Value = (int)(value ? BuildAction.None : BuildAction.Page);
+                        buildActionProp.Value = value ? buildAction.None : buildAction.Page;
                 }
                 else if (extension == ".cpp" || extension == ".c" || extension == ".cc" || extension == ".cxx")
                 {
