@@ -20,7 +20,7 @@ Files are excluded/included based on file extension:
   - **Exclude** sets **Build Action** file property to **None**
   - **Include** sets **Build Action** file property to:
     - **ApplicationDefinition** if the file defines `<Application>`
-	- **Page** otherwise
+    - **Page** otherwise
 
 For C/C++ it is possible to affect only the Active project configuration (default) or All project configurations. Choose one of the options in menu **Tools -> More**.
 The default behavior of the main menu buttons can be changed in **Tools -> Options -> Exclude from Build**.
