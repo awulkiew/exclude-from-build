@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="ExcludeFromBuild.aff619f3-ad99-4246-b570-b012a51f21d3" Version="1.4.0" Language="en-US" Publisher="Adam Wulkiewicz" />
+        <Identity Id="ExcludeFromBuild.aff619f3-ad99-4246-b570-b012a51f21d3" Version="1.5.0" Language="en-US" Publisher="Adam Wulkiewicz" />
         <DisplayName>Exclude from Build</DisplayName>
         <Description xml:space="preserve">Exclude from build or include in build multiple files and directories with one click.</Description>
         <License>LICENSE_1_0.txt</License>

@@ -17,33 +17,22 @@ namespace ExcludeFromBuild
     {
         public enum Configuration { Active, All };
 
-        private class BuildAction
+        //VSLangProj.prjBuildAction
+        private enum BuildAction
         {
-            public BuildAction(DTE2 dte)
-            {
-                // TODO: BuildAction values are different in various versions of VS
-                // - The enum values listed here are only the basic ones 0 - 3:
-                //   https://docs.microsoft.com/en-us/dotnet/api/vslangproj.prjbuildaction
-                // - in tested 2013, 2015 and 2019 Page = 5
-                // - in tested 2017 which is also used for development of this extension Page = 7
-                //   https://docs.microsoft.com/en-us/visualstudio/ide/build-actions
-                //   suggests that for 2019 Page = 7 which is not correct
-                // - https://docs.microsoft.com/en-us/visualstudio/mac/build-actions
-                //   lists only the basic 4 values
-                // - https://expertsys.hu/2014/11/20/setting-project-items-buildaction-from-nuget-package/
-                //   suggests the it is possible to get the remaining values
-                //int i = dte.Version.IndexOf('.');
-                //if (i < 0)
-                //    i = dte.Version.Length;
-                //version = int.Parse(dte.Version.Substring(0, i));
-            }
+            None = 0,
+            Compile = 1,
+            Content = 2,
+            EmbeddedResource = 3
+        }
 
-            //private readonly int version;
-
-            public int None { get { return 0; } }
-            public int Compile { get { return 1; } }
-            //public int ApplicationDefinition { get { return version == 15 ? 6 : 4; } }
-            //public int Page { get { return version == 15 ? 7 : 5; } }
+        private class ItemType
+        {
+            //public static readonly string None = "None";
+            //public static readonly string Compile = "Compile";
+            public static readonly string ApplicationDefinition = "ApplicationDefinition";
+            public static readonly string Page = "Page";
+            public static readonly string Resource = "Resource";
         }
 
 #pragma warning disable VSTHRD010
@@ -54,9 +43,7 @@ namespace ExcludeFromBuild
             var items = dte.ToolWindows.SolutionExplorer.SelectedItems as Array;
             if (items == null)
                 return;
-
-            BuildAction buildAction = new BuildAction(dte);
-            SetExcludedFromBuildRecursive(items, value, configuration, buildAction);
+            SetExcludedFromBuildRecursive(items, value, configuration);
         }
 
         // Casting COM objects to VCFile and VCFilter works but the problem is that
@@ -66,8 +53,7 @@ namespace ExcludeFromBuild
 
         private static void SetExcludedFromBuildRecursive(IEnumerable items,
                                                           bool value,
-                                                          Configuration configuration,
-                                                          BuildAction buildAction)
+                                                          Configuration configuration)
         {
             foreach (var item in items)
             {
@@ -78,7 +64,7 @@ namespace ExcludeFromBuild
                 // Any container, e.g. filter or C# XAML, etc.
                 if (hitem.UIHierarchyItems.Count > 0)
                 {
-                    SetExcludedFromBuildRecursive(hitem.UIHierarchyItems, value, configuration, buildAction);
+                    SetExcludedFromBuildRecursive(hitem.UIHierarchyItems, value, configuration);
                 }
 
                 // For C++ this is Microsoft.VisualStudio.VCProjectEngine.VCProjectItem
@@ -91,21 +77,42 @@ namespace ExcludeFromBuild
                     continue;
                 extension = extension.ToLowerInvariant();
 
-                // C#, VB, WPF
-                if (extension == ".cs" || extension == ".vb" /*|| extension == ".xaml"*/)
+                // C#, VB
+                if (extension == ".cs" || extension == ".vb")
                 {
-                    Property buildActionProp = GetProperty(pitem, "BuildAction");
-                    if (buildActionProp == null)
-                        continue;
-                    //if (extension == ".cs" || extension == ".vb")
-                        buildActionProp.Value = value ? buildAction.None : buildAction.Compile;
-                    // TODO: Commented-out because of inconsistent values across various
-                    //   VS versions (see above).
-                    //else //if (extension == ".xaml")
-                    //    buildActionProp.Value = value ? buildAction.None : buildAction.Page;
+                    SetPropertyValue(pitem, "BuildAction",
+                        (int)(value ? BuildAction.None : BuildAction.Compile));
+                }
+                // WPF
+                else if (extension == ".xaml")
+                {
+                    if (value)
+                        SetPropertyValue(pitem, "BuildAction", (int)BuildAction.None);
+                    else
+                    {
+                        bool isSet = false;
+                        string url = GetPropertyValue(pitem, "URL") as string;
+                        if (url != null)
+                        {
+                            string rootName = RootXMLElementName(url);
+                            if (rootName != null)
+                            {
+                                if (rootName == "Application")
+                                    SetPropertyValue(pitem, "ItemType", ItemType.ApplicationDefinition);
+                                else
+                                    SetPropertyValue(pitem, "ItemType", ItemType.Page);
+                                isSet = true;
+                            }
+                        }
+
+                        if (!isSet)
+                            SetPropertyValue(pitem, "ItemType", ItemType.Page);
+                    }
                 }
                 // C, C++
-                else if (extension == ".cpp" || extension == ".c" || extension == ".cc" || extension == ".cxx")
+                else if (extension == ".c" || extension == ".cc"
+                    || extension == ".cpp" || extension == ".cxx" || extension == ".c++"
+                    || extension == ".m" || extension == ".mm")
                 {
                     string kind = GetPropertyValue(pitem, "Kind") as string;
                     if (kind == "VCFile")
@@ -188,6 +195,13 @@ namespace ExcludeFromBuild
             return prop != null ? prop.Value : null;
         }
 
+        private static void SetPropertyValue(ProjectItem pitem, string name, object value)
+        {
+            Property prop = GetProperty(pitem, name);
+            if (prop != null)
+                prop.Value = value;
+        }
+
         public static Configuration GetConfigurationOption()
         {
             var package = ExcludeFromBuildPackage.Instance;
@@ -195,6 +209,30 @@ namespace ExcludeFromBuild
             return options.DefaultConfiguration == ExcludeFromBuildOptionPage.Configuration.All
                  ? Configuration.All
                  : Configuration.Active;
+        }
+
+        private static string RootXMLElementName(string url)
+        {
+            try
+            {
+                using (System.Xml.XmlReader reader = System.Xml.XmlReader.Create(url))
+                {
+                    reader.MoveToContent();
+                    return reader.Name;
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        private static List<string> GetPropertiesNames(ProjectItem pitem)
+        {
+            List<string> result = new List<string>();
+            foreach (Property p in pitem.Properties)
+                result.Add(p.Name);
+            return result;
         }
     }
 }

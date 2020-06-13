@@ -10,12 +10,17 @@ This extension allows to exclude from build or include in build multiple **C**/*
 ![Exclude From Build](images/preview.png)
 
 Files are excluded/included based on file extension:
-- **.c**, **.cc**, **.cpp**, **.cxx**
+- **.c**, **.cc**, **.cpp**, **.cxx**, **.c++**, **.m**, **.mm**
   - **Exclude** sets **Excluded from Build** file property to **Yes**/**True**
   - **Include** sets **Excluded from Build** file property to **No**/**False**
 - **.cs**, **.vb**
   - **Exclude** sets **Build Action** file property to **None**
   - **Include** sets **Build Action** file property to **Compile**
+- **.xaml**
+  - **Exclude** sets **Build Action** file property to **None**
+  - **Include** sets **Build Action** file property to:
+    - **ApplicationDefinition** if the root element defined in the file is **Application**
+	- **Page** otherwise
 
 For C/C++ it is possible to affect only the Active project configuration (default) or All project configurations. Choose one of the options in menu **Tools -> More**.
 The default behavior of the main menu buttons can be changed in **Tools -> Options -> Exclude from Build**.
