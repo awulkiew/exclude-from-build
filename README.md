@@ -19,7 +19,7 @@ Files are excluded/included based on file extension:
 - **.xaml**
   - **Exclude** sets **Build Action** file property to **None**
   - **Include** sets **Build Action** file property to:
-    - **ApplicationDefinition** if the file defines <Application>
+    - **ApplicationDefinition** if the file defines `<Application>`
 	- **Page** otherwise
 
 For C/C++ it is possible to affect only the Active project configuration (default) or All project configurations. Choose one of the options in menu **Tools -> More**.
