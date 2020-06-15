@@ -61,6 +61,13 @@ namespace ExcludeFromBuild
                 if (hitem == null)
                     continue;
 
+                // Not expanded UIHierarchyItems report 0 Items
+                if (!hitem.UIHierarchyItems.Expanded)
+                {
+                    hitem.UIHierarchyItems.Expanded = true;
+                    hitem.UIHierarchyItems.Expanded = false;
+                }
+
                 // Any container, e.g. filter or C# XAML, etc.
                 if (hitem.UIHierarchyItems.Count > 0)
                 {
