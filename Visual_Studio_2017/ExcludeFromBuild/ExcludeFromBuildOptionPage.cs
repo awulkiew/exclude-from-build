@@ -22,7 +22,7 @@ namespace ExcludeFromBuild
 
         [Category("General")]
         [DisplayName("Default Configuration(s)")]
-        [Description("Defines which configurations are affected when the default menu buttons are chosen.")]
+        [Description("Defines which configurations are affected when the basic buttons are chosen.")]
         public Configuration DefaultConfiguration { get; set; } = Configuration.Active;
     }
 }
