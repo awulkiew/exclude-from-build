@@ -4,7 +4,7 @@
 This extension allows to exclude from build or include in build multiple **C**/**C++**/**C#**/**VB** files and directories with one click.
 
 1. Select directories and/or files you'd like to exclude or include
-2. Right-click the selection or go to menu **Tools**
+2. **Right-click** the selection or go to menu **Tools**
 3. Choose **Exclude from Build** or **Include in Build**
 
 ![Exclude From Build](images/preview.png)
