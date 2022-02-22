@@ -1,5 +1,11 @@
 # Exclude from Build
-## extension for Visual Studio 2013, 2015, 2017 and 2019
+### Extension for Visual Studio 2013, 2015, 2017 and 2019
+
+[![VS Marketplace](https://vsmarketplacebadge.apphb.com/version-short/AdamWulkiewicz.ExcludeFromBuild.svg)](https://marketplace.visualstudio.com/items?itemName=AdamWulkiewicz.ExcludeFromBuild)
+[![Installs](https://vsmarketplacebadge.apphb.com/installs-short/AdamWulkiewicz.ExcludeFromBuild.svg)](https://marketplace.visualstudio.com/items?itemName=AdamWulkiewicz.ExcludeFromBuild)
+[![Rating](https://vsmarketplacebadge.apphb.com/rating-short/AdamWulkiewicz.ExcludeFromBuild.svg)](https://marketplace.visualstudio.com/items?itemName=AdamWulkiewicz.ExcludeFromBuild)
+![License](https://img.shields.io/github/license/awulkiew/exclude-from-build.svg)
+[![Donate](https://img.shields.io/badge/Donate-_-yellow.svg)](https://awulkiew.github.io/donate)
 
 This extension allows to exclude from build or include in build multiple **C**/**C++**/**C#**/**VB** files and directories with one click.
 
