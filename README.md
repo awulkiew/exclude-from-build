@@ -1,9 +1,9 @@
 # Exclude from Build
 ### Extension for Visual Studio 2013, 2015, 2017 and 2019
 
-[![VS Marketplace](https://vsmarketplacebadge.apphb.com/version-short/AdamWulkiewicz.ExcludeFromBuild.svg)](https://marketplace.visualstudio.com/items?itemName=AdamWulkiewicz.ExcludeFromBuild)
-[![Installs](https://vsmarketplacebadge.apphb.com/installs-short/AdamWulkiewicz.ExcludeFromBuild.svg)](https://marketplace.visualstudio.com/items?itemName=AdamWulkiewicz.ExcludeFromBuild)
-[![Rating](https://vsmarketplacebadge.apphb.com/rating-short/AdamWulkiewicz.ExcludeFromBuild.svg)](https://marketplace.visualstudio.com/items?itemName=AdamWulkiewicz.ExcludeFromBuild)
+[![VS Marketplace](https://vsmarketplacebadges.dev/version-short/AdamWulkiewicz.ExcludeFromBuild.svg)](https://marketplace.visualstudio.com/items?itemName=AdamWulkiewicz.ExcludeFromBuild)
+[![Installs](https://vsmarketplacebadges.dev/installs-short/AdamWulkiewicz.ExcludeFromBuild.svg)](https://marketplace.visualstudio.com/items?itemName=AdamWulkiewicz.ExcludeFromBuild)
+[![Rating](https://vsmarketplacebadges.dev/rating-short/AdamWulkiewicz.ExcludeFromBuild.svg)](https://marketplace.visualstudio.com/items?itemName=AdamWulkiewicz.ExcludeFromBuild)
 ![License](https://img.shields.io/github/license/awulkiew/exclude-from-build.svg)
 [![Donate](https://img.shields.io/badge/Donate-_-yellow.svg)](https://awulkiew.github.io/donate)
 
