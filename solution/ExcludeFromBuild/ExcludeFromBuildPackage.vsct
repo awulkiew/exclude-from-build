@@ -54,11 +54,20 @@
       <Group guid="guidExcludeFromBuildPackageCmdSet" id="EFB_SolnContextMenuGroup" priority="0x0700">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_SOLNNODE" />
       </Group>
-      <Group guid="guidExcludeFromBuildPackageCmdSet" id="EFB_MultiContextMenuGroup" priority="0x0100">
+      <Group guid="guidExcludeFromBuildPackageCmdSet" id="EFB_MultiItemContextMenuGroup" priority="0x0100">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_XPROJ_MULTIITEM" />
       </Group>
-      <Group guid="guidExcludeFromBuildPackageCmdSet" id="EFB_MultiProjContextMenuGroup" priority="0x0100">
+      <Group guid="guidExcludeFromBuildPackageCmdSet" id="EFB_ProjItemContextMenuGroup" priority="0x0100">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_XPROJ_PROJITEM" />
+      </Group>
+      <Group guid="guidExcludeFromBuildPackageCmdSet" id="EFB_MultiProjContextMenuGroup" priority="0x0400">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_XPROJ_MULTIPROJ" />
+      </Group>
+      <Group guid="guidExcludeFromBuildPackageCmdSet" id="EFB_SlnProjContextMenuGroup" priority="0x0400">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_XPROJ_SLNPROJ" />
+      </Group>
+      <Group guid="guidExcludeFromBuildPackageCmdSet" id="EFB_SlnItemContextMenuGroup" priority="0x0400">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_XPROJ_SLNITEM" />
       </Group>
     </Groups>
 
@@ -182,14 +191,28 @@
         </Strings>
       </Button>
       <Button guid="guidExcludeFromBuildPackageCmdSet" id="ExcludeFromBuildCommandId" priority="0x0100" type="Button">
-        <Parent guid="guidExcludeFromBuildPackageCmdSet" id="EFB_MultiContextMenuGroup"/>
+        <Parent guid="guidExcludeFromBuildPackageCmdSet" id="EFB_MultiItemContextMenuGroup"/>
         <Icon guid="guidExcludeFromBuildIcon" id="excludeFromBuildIcon" />
         <Strings>
           <ButtonText>Exclude from Build</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidExcludeFromBuildPackageCmdSet" id="IncludeInBuildCommandId" priority="0x0100" type="Button">
-        <Parent guid="guidExcludeFromBuildPackageCmdSet" id="EFB_MultiContextMenuGroup"/>
+        <Parent guid="guidExcludeFromBuildPackageCmdSet" id="EFB_MultiItemContextMenuGroup"/>
+        <Icon guid="guidIncludeInBuildIcon" id="includeInBuildIcon" />
+        <Strings>
+          <ButtonText>Include in Build</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidExcludeFromBuildPackageCmdSet" id="ExcludeFromBuildCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidExcludeFromBuildPackageCmdSet" id="EFB_ProjItemContextMenuGroup"/>
+        <Icon guid="guidExcludeFromBuildIcon" id="excludeFromBuildIcon" />
+        <Strings>
+          <ButtonText>Exclude from Build</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidExcludeFromBuildPackageCmdSet" id="IncludeInBuildCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidExcludeFromBuildPackageCmdSet" id="EFB_ProjItemContextMenuGroup"/>
         <Icon guid="guidIncludeInBuildIcon" id="includeInBuildIcon" />
         <Strings>
           <ButtonText>Include in Build</ButtonText>
@@ -209,7 +232,34 @@
           <ButtonText>Include in Build</ButtonText>
         </Strings>
       </Button>
-      
+      <Button guid="guidExcludeFromBuildPackageCmdSet" id="ExcludeFromBuildCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidExcludeFromBuildPackageCmdSet" id="EFB_SlnProjContextMenuGroup"/>
+        <Icon guid="guidExcludeFromBuildIcon" id="excludeFromBuildIcon" />
+        <Strings>
+          <ButtonText>Exclude from Build</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidExcludeFromBuildPackageCmdSet" id="IncludeInBuildCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidExcludeFromBuildPackageCmdSet" id="EFB_SlnProjContextMenuGroup"/>
+        <Icon guid="guidIncludeInBuildIcon" id="includeInBuildIcon" />
+        <Strings>
+          <ButtonText>Include in Build</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidExcludeFromBuildPackageCmdSet" id="ExcludeFromBuildCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidExcludeFromBuildPackageCmdSet" id="EFB_SlnItemContextMenuGroup"/>
+        <Icon guid="guidExcludeFromBuildIcon" id="excludeFromBuildIcon" />
+        <Strings>
+          <ButtonText>Exclude from Build</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidExcludeFromBuildPackageCmdSet" id="IncludeInBuildCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidExcludeFromBuildPackageCmdSet" id="EFB_SlnItemContextMenuGroup"/>
+        <Icon guid="guidIncludeInBuildIcon" id="includeInBuildIcon" />
+        <Strings>
+          <ButtonText>Include in Build</ButtonText>
+        </Strings>
+      </Button>
     </Buttons>
 
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
@@ -239,8 +289,11 @@
       <IDSymbol name="EFB_FolderContextMenuGroup" value="0x1810"/>
       <IDSymbol name="EFB_ProjContextMenuGroup" value="0x1820"/>
       <IDSymbol name="EFB_SolnContextMenuGroup" value="0x1830"/>
-      <IDSymbol name="EFB_MultiContextMenuGroup" value="0x1840"/>
-      <IDSymbol name="EFB_MultiProjContextMenuGroup" value="0x1850"/>
+      <IDSymbol name="EFB_MultiItemContextMenuGroup" value="0x1840"/>
+      <IDSymbol name="EFB_ProjItemContextMenuGroup" value="0x1850"/>
+      <IDSymbol name="EFB_MultiProjContextMenuGroup" value="0x1860"/>
+      <IDSymbol name="EFB_SlnProjContextMenuGroup" value="0x1870"/>
+      <IDSymbol name="EFB_SlnItemContextMenuGroup" value="0x1880"/>
 
       <IDSymbol name="ExcludeFromBuildCommandId" value="0x0100" />
       <IDSymbol name="IncludeInBuildCommandId" value="4129" />

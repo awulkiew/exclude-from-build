@@ -75,15 +75,5 @@ namespace ExcludeFromBuild
             await ExcludeFromBuildAllCommand.InitializeAsync(this);
             await IncludeInBuildAllCommand.InitializeAsync(this);
         }
-
-        //public new object GetService(Type serviceType)
-        //{
-        //    return base.GetService(serviceType);
-        //}
-
-        //public new DialogPage GetDialogPage(Type dialogPageType)
-        //{
-        //    return base.GetDialogPage(dialogPageType);
-        //}
     }
 }
