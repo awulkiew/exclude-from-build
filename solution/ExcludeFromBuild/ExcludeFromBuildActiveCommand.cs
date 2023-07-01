@@ -9,6 +9,7 @@ using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
 using System;
 using System.ComponentModel.Design;
+using System.Threading.Tasks;
 
 namespace ExcludeFromBuild
 {
@@ -30,7 +31,9 @@ namespace ExcludeFromBuild
         /// <summary>
         /// VS Package that provides this command, not null.
         /// </summary>
-        private readonly Package package;
+        private readonly AsyncPackage package;
+
+        private readonly DTE2 dte;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExcludeFromBuildCommand"/> class.
@@ -38,10 +41,11 @@ namespace ExcludeFromBuild
         /// </summary>
         /// <param name="package">Owner package, not null.</param>
         /// <param name="commandService">Command service to add command to, not null.</param>
-        private ExcludeFromBuildActiveCommand(Package package, OleMenuCommandService commandService)
+        private ExcludeFromBuildActiveCommand(AsyncPackage package, OleMenuCommandService commandService, DTE2 dte)
         {
             this.package = package ?? throw new ArgumentNullException(nameof(package));
             commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
+            this.dte = dte ?? throw new ArgumentNullException(nameof(dte));
 
             var menuCommandID = new CommandID(CommandSet, CommandId);
             var menuItem = new MenuCommand(this.Execute, menuCommandID);
@@ -60,7 +64,7 @@ namespace ExcludeFromBuild
         /// <summary>
         /// Gets the service provider from the owner package.
         /// </summary>
-        private IServiceProvider ServiceProvider
+        private IAsyncServiceProvider ServiceProvider
         {
             get
             {
@@ -72,11 +76,13 @@ namespace ExcludeFromBuild
         /// Initializes the singleton instance of the command.
         /// </summary>
         /// <param name="package">Owner package, not null.</param>
-        public static void Initialize(ExcludeFromBuildPackage package)
+        public static async Task InitializeAsync(AsyncPackage package)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
-            OleMenuCommandService commandService = package.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;            
-            Instance = new ExcludeFromBuildActiveCommand(package, commandService);
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
+
+            OleMenuCommandService commandService = await package.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
+            DTE2 dte = await package.GetServiceAsync(typeof(DTE)) as DTE2;
+            Instance = new ExcludeFromBuildActiveCommand(package, commandService, dte);
         }
 
         /// <summary>
@@ -89,9 +95,8 @@ namespace ExcludeFromBuild
         private void Execute(object sender, EventArgs e)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
-            var dte = (DTE2)ServiceProvider.GetService(typeof(DTE));
+            
             Util.SetExcludedFromBuild(dte, true, Util.Configuration.Active);
         }
-
     }
 }

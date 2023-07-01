@@ -8,6 +8,8 @@ using Microsoft.VisualStudio.Shell;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace ExcludeFromBuild
 {
@@ -28,13 +30,12 @@ namespace ExcludeFromBuild
     /// To get loaded into VS, the package must be referred by &lt;Asset Type="Microsoft.VisualStudio.VsPackage" ...&gt; in .vsixmanifest file.
     /// </para>
     /// </remarks>
-    [PackageRegistration(UseManagedResourcesOnly = true)]
+    [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // Info on this package for Help/About
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [Guid(ExcludeFromBuildPackage.PackageGuidString)]
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
     [ProvideOptionPage(typeof(ExcludeFromBuildOptionPage), "Exclude from Build", "General", 0, 0, true)]
-    public sealed class ExcludeFromBuildPackage : Package
+    public sealed class ExcludeFromBuildPackage : AsyncPackage
     {
         /// <summary>
         /// ExcludeFromBuildPackage GUID string.
@@ -61,28 +62,28 @@ namespace ExcludeFromBuild
         /// Initialization of the package; this method is called right after the package is sited, so this is the place
         /// where you can put all the initialization code that rely on services provided by VisualStudio.
         /// </summary>
-        protected override void Initialize()
+        protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
+            await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+
             Instance = this;
 
-            base.Initialize();
-
-            ExcludeFromBuildCommand.Initialize(this);
-            IncludeInBuildCommand.Initialize(this);
-            ExcludeFromBuildActiveCommand.Initialize(this);
-            IncludeInBuildActiveCommand.Initialize(this);
-            ExcludeFromBuildAllCommand.Initialize(this);
-            IncludeInBuildAllCommand.Initialize(this);
+            await ExcludeFromBuildCommand.InitializeAsync(this);
+            await IncludeInBuildCommand.InitializeAsync(this);
+            await ExcludeFromBuildActiveCommand.InitializeAsync(this);
+            await IncludeInBuildActiveCommand.InitializeAsync(this);
+            await ExcludeFromBuildAllCommand.InitializeAsync(this);
+            await IncludeInBuildAllCommand.InitializeAsync(this);
         }
 
-        public new object GetService(Type serviceType)
-        {
-            return base.GetService(serviceType);
-        }
+        //public new object GetService(Type serviceType)
+        //{
+        //    return base.GetService(serviceType);
+        //}
 
-        public new DialogPage GetDialogPage(Type dialogPageType)
-        {
-            return base.GetDialogPage(dialogPageType);
-        }
+        //public new DialogPage GetDialogPage(Type dialogPageType)
+        //{
+        //    return base.GetDialogPage(dialogPageType);
+        //}
     }
 }
