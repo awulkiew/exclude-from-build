@@ -35,6 +35,10 @@
          other menus or buttons (commands); from a visual point of view you can see the
          group as the part of a menu contained between two lines. The parent of a group
          must be a menu. -->
+    
+    <!-- For IDs see:
+         https://github.com/MicrosoftDocs/visualstudio-docs/blob/main/docs/extensibility/internals/ide-defined-commands-for-extending-project-systems.md -->
+    
     <Groups>
       <Group guid="guidExcludeFromBuildPackageCmdSet" id="ExcludeFromBuildMenuGroup" priority="0x0600">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS" />
