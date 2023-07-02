@@ -1,5 +1,5 @@
 # Exclude from Build
-### Extension for Visual Studio 2013, 2015, 2017 and 2019
+### Extension for Visual Studio
 
 [![VS Marketplace](https://vsmarketplacebadges.dev/version-short/AdamWulkiewicz.ExcludeFromBuild.svg)](https://marketplace.visualstudio.com/items?itemName=AdamWulkiewicz.ExcludeFromBuild)
 [![Installs](https://vsmarketplacebadges.dev/installs-short/AdamWulkiewicz.ExcludeFromBuild.svg)](https://marketplace.visualstudio.com/items?itemName=AdamWulkiewicz.ExcludeFromBuild)
@@ -31,4 +31,12 @@ Files are excluded/included based on file extension:
 For C/C++ it is possible to affect only the **Active** project configuration (default) or **All** project configurations. Choose one of the options in menu **Tools -> More**.
 The behavior of the basic buttons can be changed in **Tools -> Options -> Exclude from Build**.
 
+#### Download
+
 You can download this extension from [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=AdamWulkiewicz.ExcludeFromBuild) or [GitHub](https://github.com/awulkiew/exclude-from-build/releases).
+
+#### Supported Versions
+
+Visual Studio 2013, 2015, 2017 and 2019 - [version 1.6](https://github.com/awulkiew/exclude-from-build/releases/tag/v1.6)
+
+Visual Studio 2022 - [version 1.10 and newer](https://github.com/awulkiew/exclude-from-build/releases)
