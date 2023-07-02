@@ -7,9 +7,11 @@
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.ComponentModel.Design;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace ExcludeFromBuild
 {
@@ -34,6 +36,7 @@ namespace ExcludeFromBuild
         private readonly AsyncPackage package;
 
         private readonly DTE2 dte;
+        private readonly IVsStatusbar statusBar;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExcludeFromBuildCommand"/> class.
@@ -41,11 +44,12 @@ namespace ExcludeFromBuild
         /// </summary>
         /// <param name="package">Owner package, not null.</param>
         /// <param name="commandService">Command service to add command to, not null.</param>
-        private ExcludeFromBuildActiveCommand(AsyncPackage package, OleMenuCommandService commandService, DTE2 dte)
+        private ExcludeFromBuildActiveCommand(AsyncPackage package, OleMenuCommandService commandService, DTE2 dte, IVsStatusbar statusBar)
         {
             this.package = package ?? throw new ArgumentNullException(nameof(package));
             commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
             this.dte = dte ?? throw new ArgumentNullException(nameof(dte));
+            this.statusBar = statusBar ?? throw new ArgumentNullException(nameof(statusBar));
 
             var menuCommandID = new CommandID(CommandSet, CommandId);
             var menuItem = new MenuCommand(this.Execute, menuCommandID);
@@ -82,7 +86,8 @@ namespace ExcludeFromBuild
 
             OleMenuCommandService commandService = await package.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
             DTE2 dte = await package.GetServiceAsync(typeof(DTE)) as DTE2;
-            Instance = new ExcludeFromBuildActiveCommand(package, commandService, dte);
+            IVsStatusbar statusBar = await package.GetServiceAsync(typeof(SVsStatusbar)) as IVsStatusbar;
+            Instance = new ExcludeFromBuildActiveCommand(package, commandService, dte, statusBar);
         }
 
         /// <summary>
@@ -96,7 +101,10 @@ namespace ExcludeFromBuild
         {
             ThreadHelper.ThrowIfNotOnUIThread();
             
-            Util.SetExcludedFromBuild(dte, true, Util.Configuration.Active);
+            Util.UnfreezeStatusBar(statusBar);
+            Util.SetExcludedFromBuild(dte, true, Util.Configuration.Active,
+                                      (string name) => { statusBar.SetText("Exclude (Active): " + name); });
+            statusBar.SetText("");
         }
     }
 }

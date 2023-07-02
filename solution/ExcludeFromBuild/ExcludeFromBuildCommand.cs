@@ -7,9 +7,13 @@
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.ComponentModel.Design;
+using System.Drawing;
+using System.Net;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace ExcludeFromBuild
 {
@@ -34,6 +38,7 @@ namespace ExcludeFromBuild
         private readonly AsyncPackage package;
 
         private readonly DTE2 dte;
+        private readonly IVsStatusbar statusBar;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExcludeFromBuildCommand"/> class.
@@ -41,11 +46,12 @@ namespace ExcludeFromBuild
         /// </summary>
         /// <param name="package">Owner package, not null.</param>
         /// <param name="commandService">Command service to add command to, not null.</param>
-        private ExcludeFromBuildCommand(AsyncPackage package, OleMenuCommandService commandService, DTE2 dte)
+        private ExcludeFromBuildCommand(AsyncPackage package, OleMenuCommandService commandService, DTE2 dte, IVsStatusbar statusBar)
         {
             this.package = package ?? throw new ArgumentNullException(nameof(package));
             commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
             this.dte = dte ?? throw new ArgumentNullException(nameof(dte));
+            this.statusBar = statusBar ?? throw new ArgumentNullException(nameof(statusBar));
 
             var menuCommandID = new CommandID(CommandSet, CommandId);
             var menuItem = new MenuCommand(this.Execute, menuCommandID);
@@ -82,8 +88,12 @@ namespace ExcludeFromBuild
 
             OleMenuCommandService commandService = await package.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
             DTE2 dte = await package.GetServiceAsync(typeof(DTE)) as DTE2;
-            Instance = new ExcludeFromBuildCommand(package, commandService, dte);
+            IVsStatusbar statusBar = await package.GetServiceAsync(typeof(SVsStatusbar)) as IVsStatusbar;
+            Instance = new ExcludeFromBuildCommand(package, commandService, dte, statusBar);
         }
+
+        [System.Runtime.InteropServices.DllImport("gdi32.dll")]
+        public static extern bool DeleteObject(IntPtr hObject);
 
         /// <summary>
         /// This function is the callback used to execute the command when the menu item is clicked.
@@ -96,8 +106,10 @@ namespace ExcludeFromBuild
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 
-            Util.SetExcludedFromBuild(dte, true, Util.GetConfigurationOption());
+            Util.UnfreezeStatusBar(statusBar);
+            Util.SetExcludedFromBuild(dte, true, Util.GetConfigurationOption(),
+                                      (string name) => { statusBar.SetText("Exclude: " + name); });
+            statusBar.SetText("");
         }
-
     }
 }

@@ -7,10 +7,14 @@
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.Shell;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Windows.Forms;
+using System.Drawing;
 
 namespace ExcludeFromBuild
 {
@@ -36,8 +40,10 @@ namespace ExcludeFromBuild
             public static readonly string Resource = "Resource";
         }
 
+        public delegate void Callback(string name);
+
 #pragma warning disable VSTHRD010
-        public static void SetExcludedFromBuild(DTE2 dte, bool value, Configuration configuration)
+        public static void SetExcludedFromBuild(DTE2 dte, bool value, Configuration configuration, Callback callback)
         {
             if (dte == null)
                 return;
@@ -45,7 +51,7 @@ namespace ExcludeFromBuild
             if (items == null)
                 return;
             HashSet<string> visited = new HashSet<string>();
-            SetExcludedFromBuildRecursive(items, value, configuration, visited);
+            SetExcludedFromBuildRecursive(items, value, configuration, callback, visited);
         }
 
         // Casting COM objects to VCFile and VCFilter works but the problem is that
@@ -56,6 +62,7 @@ namespace ExcludeFromBuild
         private static void SetExcludedFromBuildRecursive(IEnumerable items,
                                                           bool value,
                                                           Configuration configuration,
+                                                          Callback callback,
                                                           HashSet<string> visited)
         {
             foreach (var item in items)
@@ -91,6 +98,7 @@ namespace ExcludeFromBuild
                     SetExcludedFromBuildRecursive(hitem.UIHierarchyItems,
                                                   value,
                                                   configuration,
+                                                  callback,
                                                   visited);
                 }
 
@@ -107,12 +115,16 @@ namespace ExcludeFromBuild
                 // C#, VB
                 if (extension == ".cs" || extension == ".vb")
                 {
+                    callback(pitem.Name);
+
                     SetPropertyValue(pitem, "BuildAction",
                         (int)(value ? BuildAction.None : BuildAction.Compile));
                 }
                 // WPF
                 else if (extension == ".xaml")
                 {
+                    callback(pitem.Name);
+
                     if (value)
                         SetPropertyValue(pitem, "BuildAction", (int)BuildAction.None);
                     else
@@ -144,6 +156,8 @@ namespace ExcludeFromBuild
                     string kind = GetPropertyValue(pitem, "Kind") as string;
                     if (kind == "VCFile")
                     {
+                        callback(pitem.Name);
+
                         var activeConfig = pitem.ContainingProject.ConfigurationManager.ActiveConfiguration;
                         string activeConfigName = activeConfig.ConfigurationName;
                         string activePlatformName = activeConfig.PlatformName;
@@ -365,6 +379,15 @@ namespace ExcludeFromBuild
             catch (Exception)
             {
                 return null;
+            }
+        }
+
+        public static void UnfreezeStatusBar(IVsStatusbar statusBar)
+        {
+            statusBar.IsFrozen(out int frozen);
+            if (frozen != 0)
+            {
+                statusBar.FreezeOutput(0);
             }
         }
     }
